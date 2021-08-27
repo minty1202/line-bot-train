@@ -15,9 +15,9 @@ class LinebotController < ApplicationController
     events = client.parse_events_from(body)
     events.each { |event|
       case event
-        line_id = event['source']['userId']
         # メッセージが送信された場合の対応（機能①）
       when Line::Bot::Event::Message
+        line_id = event['source']['userId']
         case event.type
           # ユーザーからテキスト形式のメッセージが送られて来た場合
         when Line::Bot::Event::MessageType::Text
@@ -94,12 +94,12 @@ class LinebotController < ApplicationController
         # LINEお友達追された場合（機能②）
       when Line::Bot::Event::Follow
         # 登録したユーザーのidをユーザーテーブルに格納
-        # line_id = event['source']['userId']
+        line_id = event['source']['userId']
         User.create(line_id: line_id)
         # LINEお友達解除された場合（機能③）
       when Line::Bot::Event::Unfollow
         # お友達解除したユーザーのデータをユーザーテーブルから削除
-        # line_id = event['source']['userId']
+        line_id = event['source']['userId']
         User.find_by(line_id: line_id).destroy
       end
     }
