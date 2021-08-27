@@ -15,24 +15,41 @@ class LinebotController < ApplicationController
     events = client.parse_events_from(body)
     events.each { |event|
       case event
+        line_id = event['source']['userId']
         # メッセージが送信された場合の対応（機能①）
       when Line::Bot::Event::Message
         case event.type
           # ユーザーからテキスト形式のメッセージが送られて来た場合
         when Line::Bot::Event::MessageType::Text
+          user = User.find_by(line_id: line_id)
           # event.message['text']：ユーザーから送られたメッセージ
           input = event.message['text']
           case input
             # 「明日」or「あした」というワードが含まれる場合
           when /.*(今日|きょう).*/
-            
-            if train_status[2]
+            train_status(user.trains).each do |status|
               push =
-                "true\n今日の運行状況？こんな感じだよ(^^)\n#{train_status[0]}\n#{train_status[1]}\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
-            else
-              push =
-              "false\n今日の運行状況？こんな感じだよ(^^)\n#{train_status[0]}\n#{train_status[1]}\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+                status
             end
+            # if train_status[2]
+            #   push =
+            #     "今日の運行状況？遅れてるみたい(> <)\n#{train_status[0]}\n#{train_status[1]}\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+            # else
+            #   push =
+            #   "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+            # end
+
+          when /.*(東部|とうぶ).*/
+            user.trains.toubu_touzyou
+
+          when /.*(山手|やまのて).*/
+            user.trains.yamanote
+
+          when /.*(削除|さくじょ|消去|しょうきょ).*/
+            user.trains.destroy_all
+            push =
+              "登録してある路線を全部消したよ(> <)\nもう一度路線を登録してね"
+
           when /.*(かわいい|可愛い|カワイイ|きれい|綺麗|キレイ|素敵|ステキ|すてき|面白い|おもしろい|ありがと|すごい|スゴイ|スゴい|好き|頑張|がんば|ガンバ).*/
             push =
               "ありがとう！！！\n優しい言葉をかけてくれるあなたはとても素敵です(^^)"
@@ -40,9 +57,7 @@ class LinebotController < ApplicationController
             push =
               "こんにちは。\n声をかけてくれてありがとう\n今日があなたにとっていい日になりますように(^^)"
           else # 該当しない文字列
-            per06to12 = doc.elements[xpath + 'info/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info/rainfallchance/period[4]l'].text
+
             if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
               word =
                 ["雨だけど元気出していこうね！",
@@ -73,12 +88,12 @@ class LinebotController < ApplicationController
         # LINEお友達追された場合（機能②）
       when Line::Bot::Event::Follow
         # 登録したユーザーのidをユーザーテーブルに格納
-        line_id = event['source']['userId']
+        # line_id = event['source']['userId']
         User.create(line_id: line_id)
         # LINEお友達解除された場合（機能③）
       when Line::Bot::Event::Unfollow
         # お友達解除したユーザーのデータをユーザーテーブルから削除
-        line_id = event['source']['userId']
+        # line_id = event['source']['userId']
         User.find_by(line_id: line_id).destroy
       end
     }
