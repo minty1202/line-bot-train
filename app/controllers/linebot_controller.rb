@@ -39,7 +39,10 @@ class LinebotController < ApplicationController
               push =
               "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             end
-
+          when /.*(https:\/\/transit.yahoo.co.jp\/traininfo\/detail\/).*/
+            user.trains.create(url: input)
+            push =
+              "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n#{input}\n間違ってたら削除って入力してから打ち直してください(> <)"
           when /.*(東部|とうぶ).*/
             user.trains.toubu_touzyou
 
