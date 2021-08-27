@@ -22,6 +22,7 @@ class LinebotController < ApplicationController
           # ユーザーからテキスト形式のメッセージが送られて来た場合
         when Line::Bot::Event::MessageType::Text
           user = User.find_by(line_id: line_id)
+          puts 'aaaaaaaaaaaaaaaaa'
           # event.message['text']：ユーザーから送られたメッセージ
           input = event.message['text']
           case input
