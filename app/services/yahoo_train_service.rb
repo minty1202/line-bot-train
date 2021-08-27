@@ -28,3 +28,5 @@ end
 
 # 要素ないが全てtrueかどうか
 # info.map { |i| i[:boolean] }.all?
+# 一つのみ
+# info.map { |i| i[:boolean] }.any?
