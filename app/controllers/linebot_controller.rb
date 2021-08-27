@@ -22,35 +22,29 @@ class LinebotController < ApplicationController
           # ユーザーからテキスト形式のメッセージが送られて来た場合
         when Line::Bot::Event::MessageType::Text
           user = User.find_by(line_id: line_id)
-          puts 'aaaaaaaaaaaaaaaaa'
           # event.message['text']：ユーザーから送られたメッセージ
           input = event.message['text']
+          train_status = train_status(user.trains)
+          train_message = ''
+          train_status.each do |status|
+            train_message.concat("\n#{status[:name]}\n#{status[:text]}\n")
+          end
           case input
             # 「明日」or「あした」というワードが含まれる場合
           when /.*(今日|きょう).*/
-            train_status = train_status(user.trains)
-            train_message = ''
-            train_status.each do |status|
-              train_message.concat("\n#{status[:name]}\n#{status[:text]}\n")
-            end
             if train_status.map { |i| i[:boolean] }.all?
               push =
                 "今日の運行状況？遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             else
               push =
-              # "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
-              "今日の運行状況？今のところ大丈夫そうかな(^^)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+              "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             end
 
           when /.*(東部|とうぶ).*/
             user.trains.toubu_touzyou
-            push =
-              user.trains.to_s
 
           when /.*(山手|やまのて).*/
             user.trains.yamanote
-            push =
-              user.trains.to_s
 
           when /.*(削除|さくじょ|消去|しょうきょ).*/
             user.trains.destroy_all
@@ -64,22 +58,12 @@ class LinebotController < ApplicationController
             push =
               "こんにちは。\n声をかけてくれてありがとう\n今日があなたにとっていい日になりますように(^^)"
           else # 該当しない文字列
-
-            if per06to12.to_i >= min_per || per12to18.to_i >= min_per || per18to24.to_i >= min_per
-              word =
-                ["雨だけど元気出していこうね！",
-                 "雨に負けずファイト！！",
-                 "雨だけどあなたの明るさでみんなを元気にしてあげて(^^)"].sample
+            if train_status.map { |i| i[:boolean] }.all?
               push =
-                "今日の天気？\n今日は雨が降りそうだから傘があった方が安心だよ。\n　  6〜12時　#{per06to12}％\n　12〜18時　 #{per12to18}％\n　18〜24時　#{per18to24}％\n#{word}"
+                "今日の運行状況？遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             else
-              word =
-                ["天気もいいから一駅歩いてみるのはどう？(^^)",
-                 "今日会う人のいいところを見つけて是非その人に教えてあげて(^^)",
-                 "素晴らしい一日になりますように(^^)",
-                 "雨が降っちゃったらごめんね(><)"].sample
               push =
-                "今日の天気？\n今日は雨は降らなさそうだよ。\n#{word}"
+              "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             end
           end
           # テキスト以外（画像等）のメッセージが送られた場合
