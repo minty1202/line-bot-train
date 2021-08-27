@@ -24,7 +24,7 @@ class LinebotController < ApplicationController
           user = User.find_by(line_id: line_id)
           # event.message['text']：ユーザーから送られたメッセージ
           input = event.message['text']
-          train_status = train_status(user.trains)
+          train_status = YahooTrainService.train_status(user.trains)
           train_message = ''
           train_status.each do |status|
             train_message.concat("\n#{status[:name]}\n#{status[:text]}\n")
