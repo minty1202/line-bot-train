@@ -43,6 +43,15 @@ class LinebotController < ApplicationController
             push =
               "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n#{input}\n間違ってたら削除って入力してから打ち直してください(> <)"
 
+          when /.*(登録|とうろく).*/
+            train_status = YahooTrainService.train_status(user.trains)
+            train_name_list = ''
+            train_status.each do |status|
+              train_name_list.concat("#{status[:name]}\n")
+            end
+            push =
+              "今登録してる路線はこれだよ(^ ^)\n#{train_name_list}"
+
           when /.*(使い方|つかいかた).*/
             push =
             "最初に路線の情報を教えてください。\nhttps://transit.yahoo.co.jp/traininfo/area/4/\nこの中にある路線から普段使っている路線のURLをそのまま送ってください。\n例えば、山手線なら\nhttps://transit.yahoo.co.jp/traininfo/detail/21/0/\nといった感じです。\n登録し路線に遅延があった場合は毎朝8じごろに遅延情報を送ります。\nまた、今日と送っていただければ、今の遅延情報を送ります。\n登録した路線を消したい場合は削除と送っていただければ、登録した路線を全て削除できます。\n何か不具合がありましたら、オーナーまでお問い合わせください。"
