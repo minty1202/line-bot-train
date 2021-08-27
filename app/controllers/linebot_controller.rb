@@ -31,7 +31,7 @@ class LinebotController < ApplicationController
           case input
             # 「明日」or「あした」というワードが含まれる場合
           when /.*(今日|きょう).*/
-            if train_status.map { |i| i[:boolean] }.all?
+            if train_status.map { |i| i[:boolean] }.any?
               push =
                 "今日の運行状況？遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             else

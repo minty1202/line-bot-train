@@ -19,7 +19,7 @@ task :send_train_message => :environment do
     end
 
     # if user.trains.present? && train_status.map { |i| i[:boolean] }.all?
-    if user.trains.present?
+    if user.trains.present? && train_status.map { |i| i[:boolean] }.any?
       # 発信するメッセージの設定
       push =
       "運行状況のお知らせだよ！\n今日は電車が遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/\n今日も一日無理せず頑張ってください(^ ^)"
