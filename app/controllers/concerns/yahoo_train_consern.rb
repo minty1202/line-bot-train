@@ -25,3 +25,6 @@ module YahooTrainConsern
     station_info
   end
 end
+
+# 要素ないが全てtrueかどうか
+# info.map { |i| i[:boolean] }.all?

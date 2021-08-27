@@ -27,23 +27,28 @@ class LinebotController < ApplicationController
           case input
             # 「明日」or「あした」というワードが含まれる場合
           when /.*(今日|きょう).*/
-            train_status(user.trains).each do |status|
-              push =
-                status
+            train_status = train_status(user.trains)
+            train_message = ''
+            train_status.each do |status|
+              train_message.concat("\n#{status[:name]}\n#{status[:text]}\n")
             end
-            # if train_status[2]
-            #   push =
-            #     "今日の運行状況？遅れてるみたい(> <)\n#{train_status[0]}\n#{train_status[1]}\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
-            # else
-            #   push =
-            #   "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
-            # end
+            if train_status.map { |i| i[:boolean] }.all?
+              push =
+                "今日の運行状況？遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+            else
+              push =
+              "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/#{train_message}"
+            end
 
           when /.*(東部|とうぶ).*/
             user.trains.toubu_touzyou
+            push =
+              user.trains.to_s
 
           when /.*(山手|やまのて).*/
             user.trains.yamanote
+            push =
+              user.trains.to_s
 
           when /.*(削除|さくじょ|消去|しょうきょ).*/
             user.trains.destroy_all

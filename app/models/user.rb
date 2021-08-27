@@ -1,3 +1,3 @@
 class User < ApplicationRecord
-  has_many :train, dependent: :destroy
+  has_many :trains, dependent: :destroy
 end
