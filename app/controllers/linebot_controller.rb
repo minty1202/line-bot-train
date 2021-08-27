@@ -38,7 +38,8 @@ class LinebotController < ApplicationController
                 "今日の運行状況？遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             else
               push =
-              "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/#{train_message}"
+              # "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+              "今日の運行状況？今のところ大丈夫そうかな(^^)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             end
 
           when /.*(東部|とうぶ).*/
