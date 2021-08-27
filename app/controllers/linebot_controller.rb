@@ -4,7 +4,6 @@ class LinebotController < ApplicationController
   require 'kconv'
   require 'rexml/document'
 
-  include YahooTrainConsern
 
   def callback
     body = request.body.read
