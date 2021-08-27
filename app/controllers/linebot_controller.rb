@@ -50,7 +50,7 @@ class LinebotController < ApplicationController
               train_name_list.concat("#{status[:name]}\n")
             end
             push =
-              "今登録してる路線はこれだよ(^ ^)\n#{train_name_list}"
+              "今登録してる路線はこれだよ\n(^ ^)\n#{train_name_list}"
 
           when /.*(使い方|つかいかた).*/
             push =
