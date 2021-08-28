@@ -49,9 +49,10 @@ class LinebotController < ApplicationController
               push =
                 "その路線はもう登録してるよ(> <)\n今登録してる路線の一覧\n#{train_name_list}"
             else
-              user.trains.create(url: input)
+              new_train = user.trains.create(url: input)
+              new_train_info = YahooTrainService.train_status([new_train])
               push =
-                "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n#{input}\n間違ってたら削除って入力してから打ち直してください(> <)"
+                "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n#{new_train_info[0][:name]}\n間違ってたら削除って入力してから打ち直してください(> <)"
             end
 
           when /.*(登録|とうろく|一覧|いちらん).*/
@@ -65,7 +66,7 @@ class LinebotController < ApplicationController
                 "今登録してる路線はこれだよ\n(^ ^)\n#{train_name_list}"
             else
               push =
-              "今登録してる路線は特にないかな(> <)"
+              "今登録してる路線は特にないかな\n(> <)"
             end
 
           when /.*(使い方|つかいかた).*/
