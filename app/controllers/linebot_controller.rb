@@ -39,18 +39,34 @@ class LinebotController < ApplicationController
               "今日の運行状況？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
             end
           when /.*(https:\/\/transit.yahoo.co.jp\/traininfo\/detail\/).*/
-            user.trains.create(url: input)
-            push =
-              "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n#{input}\n間違ってたら削除って入力してから打ち直してください(> <)"
-
-          when /.*(登録|とうろく).*/
             train_status = YahooTrainService.train_status(user.trains)
             train_name_list = ''
             train_status.each do |status|
               train_name_list.concat("#{status[:name]}\n")
             end
-            push =
-              "今登録してる路線はこれだよ\n(^ ^)\n#{train_name_list}"
+            train_list = user.trains.map(&:url)
+            if train_list.include?(input)
+              push =
+                "その路線はもう登録してるよ(> <)\n今登録してる路線の一覧\n#{train_name_list}"
+            else
+              user.trains.create(url: input)
+              push =
+                "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n#{input}\n間違ってたら削除って入力してから打ち直してください(> <)"
+            end
+
+          when /.*(登録|とうろく|一覧|いちらん).*/
+            train_status = YahooTrainService.train_status(user.trains)
+            train_name_list = ''
+            train_status.each do |status|
+              train_name_list.concat("#{status[:name]}\n")
+            end
+            if train_name_list.present?
+              push =
+                "今登録してる路線はこれだよ\n(^ ^)\n#{train_name_list}"
+            else
+              push =
+              "今登録してる路線は特にないかな(> <)"
+            end
 
           when /.*(使い方|つかいかた).*/
             push =
