@@ -1,0 +1,18 @@
+ja:
+  line_bot:
+    response:
+      usage: "最初に路線の情報を教えてください。\nhttps://transit.yahoo.co.jp/traininfo/area/4/\nこの中にある路線から普段使っている路線のURLをそのまま送ってください。\n例えば、山手線なら\nhttps://transit.yahoo.co.jp/traininfo/detail/21/0/\nといった感じです。\n登録し路線に遅延があった場合は毎朝8じごろに遅延情報を送ります。\nまた、今日と送っていただければ、今の遅延情報を送ります。\n登録した路線を消したい場合は削除と送っていただければ、登録した路線を全て削除できます。\n何か不具合がありましたら、オーナーまでお問い合わせください。"
+
+      late: "今日の運行状況だね。遅れてるみたい(> <)%{user_info}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+      ok: "今日の運行状況だね。今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+      late_word_probably: "運行状況かな？遅れてるみたい\n(> <)%{user_info}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+      ok_word_probably: "運行状況かな？今のところ大丈夫そうかな(^^)\n詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/"
+
+      registered: "駅の情報を登録したよ(^ ^)\nこれであってるかな？\n%{user_info}\n間違ってたら削除って入力してから打ち直してください(> <)"
+      already_registered: "その路線はもう登録してるよ\n(> <)\n今登録してる路線の一覧\n%{user_info}"
+      registered_list: "今登録してる路線はこれだよ\n(^ ^)\n%{user_info}"
+      no_registered_list: "今登録してる路線は特にないかな\n(> <)"
+
+      delete: "登録してある路線を全部消したよ(> <)\nもう一度路線を登録してね"
+      thanks: "ありがとう！！！\n優しい言葉をかけてくれるあなたはとても素敵です(^^)"
+      hello: "こんにちは。\n声をかけてくれてありがとう\n今日があなたにとっていい日になりますように(^^)"
