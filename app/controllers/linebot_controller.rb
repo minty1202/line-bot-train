@@ -16,29 +16,23 @@ class LinebotController < ApplicationController
 
     events.each do |event|
       line_id = event['source']['userId']
-
       case event
-        
-      when Line::Bot::Event::Message # メッセージが送信された場合の対応（機能①）
+      when Line::Bot::Event::Message # メッセージが送信された場合の対応
         user = User.find_by(line_id: line_id) || User.create(line_id: line_id)
-        
-        unless event.type == Line::Bot::Event::MessageType::Text
-          push = "テキスト以外はわからないよ〜(；；)" 
-          message = {
-            type: 'text',
-            text: push
-          }
-          client.reply_message(event['replyToken'], message)
-          head :ok
-        end and return
+        push = 
+          event.type == Line::Bot::Event::MessageType::Text ? TextResponseService.new(event.message['text'], user).message : "テキスト以外はわからないよ〜(；；)"
+        message = {
+          type: 'text',
+          text: push
+        }
+        client.reply_message(event['replyToken'], message)
 
-        # ユーザーからテキスト形式のメッセージが送られて来た場合
-        received_text = event.message['text']
-        TextResponseService.message(received_text, user, client, event)
-      when Line::Bot::Event::Follow # LINEお友達追された場合（機能②）
+      when Line::Bot::Event::Follow # LINEお友達追された場合
         User.create(line_id: line_id)
-      when Line::Bot::Event::Unfollow# LINEお友達解除された場合（機能③）
+
+      when Line::Bot::Event::Unfollow# LINEお友達解除された場合
         User.find_by(line_id: line_id).destroy
+
       end
     end
     head :ok
