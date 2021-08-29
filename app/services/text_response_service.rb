@@ -11,9 +11,10 @@ class TextResponseService
     user_train_info = YahooTrainService.new(user.trains)
     case received_text
     when /.*(今日|きょう|情報|じょうほう|遅延|ちえん).*/
-      text_i18n('no_registered_list') if user.trains.blank?
+      return text_i18n('no_registered_list') if user.trains.blank?
 
       user_train_info.delay? ? text_i18n('late', user_train_info.message) : text_i18n('ok')
+
     when /.*(https:\/\/transit.yahoo.co.jp\/traininfo\/detail\/).*/
       user.url_is_registered?(received_text) ? text_i18n('already_registered', user_train_info.name_list) : text_i18n('registered', user_train_registration.info[0][:name])
 
