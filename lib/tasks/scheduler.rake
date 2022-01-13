@@ -12,14 +12,11 @@ task :send_train_message => :environment do
 
   users = User.includes(:trains)
   users.each do |user|
-    train_status = YahooTrainService.train_status(user.trains)
-    train_message = ''
-    train_status.each do |status|
-      train_message.concat("\n#{status[:name]}\n#{status[:text]}\n")
-    end
-
+    train_status = YahooTrainService.new(user.trains)
+    train_message = train_status.message
+      
     # if user.trains.present? && train_status.map { |i| i[:boolean] }.all?
-    if user.trains.present? && train_status.map { |i| i[:boolean] }.any?
+    if train_status.delay?
       # 発信するメッセージの設定
       push =
       "運行状況のお知らせだよ！\n今日は電車が遅れてるみたい(> <)#{train_message}詳しくはこれをみてね！\nhttps://transit.yahoo.co.jp/traininfo/area/4/\n今日も一日無理せず頑張ってください(^ ^)"

@@ -65,4 +65,6 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   # config.hosts << 'xxxxxxxxx.ngrok.io' 外からのpostを受け取るとき
+  config.hosts << 'a992-60-69-140-251.ngrok.io'
+  
 end
