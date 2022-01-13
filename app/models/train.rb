@@ -1,3 +1,3 @@
 class Train < ApplicationRecord
-  YAHOO_DETAIL_BASE_URL='https://transit.yahoo.co.jp/traininfo/detail/'.freeze
+  YAHOO_DETAIL_BASE_URL='https://transit.yahoo.co.jp/diainfo/'.freeze
 end

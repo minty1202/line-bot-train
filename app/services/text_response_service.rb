@@ -15,7 +15,7 @@ class TextResponseService
 
       user_train_info.delay? ? text_i18n('late', user_train_info.message) : text_i18n('ok')
 
-    when /.*(https:\/\/transit.yahoo.co.jp\/traininfo\/detail\/).*/
+    when /.*(https:\/\/transit.yahoo.co.jp\/diainfo\/).*/
       user.url_is_registered?(received_text) ? text_i18n('already_registered', user_train_info.name_list) : text_i18n('registered', user_train_registration.info[0][:name])
 
     when /.*(登録|とうろく|一覧|いちらん).*/
