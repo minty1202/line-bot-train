@@ -5,7 +5,7 @@
 - 朝に登録した路線で遅延があった際にLineで教えてくれます。
 - 路線登録後「遅延」と送ると遅延があるか調べてくれます。
 
-![line](public/img/use_picture.jpg)  
+![line](public/img/use_gif.gif)  
 
 QR code  
 ![qr](public/img/qr.png)  
